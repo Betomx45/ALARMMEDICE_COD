@@ -1,15 +1,15 @@
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MedicinesScreen from "./features/medicines/application/screens/medicinesScreen";
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; 
-import ProfileScreen from "./features/auth/application/screens/logout";
-import TreatmentScreen from "./features/users/application/screens/usersScreen";
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import ProfileScreen from "./features/users/application/screens/logout";
+import TreatmentScreen from "./features/treatments/application/screens/treatmentsScreen";
 
 
 const Tab = createBottomTabNavigator();
 
-export default function MainScreen ({}) {
-    return(
+export default function MainScreen({ }) {
+    return (
         <Tab.Navigator
             initialRouteName="Alarm Medicine"
             screenOptions={{
@@ -18,27 +18,25 @@ export default function MainScreen ({}) {
         >
             <Tab.Screen
                 name="Medicines"
-                component={MedicinesScreen}
+                component={TreatmentScreen}
                 options={{
-
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="alarm-plus" size={size} color={color} />
                     ),
-                    title: 'Registro de Medicamento'
+                    title: 'Medicamentos'
                 }}
             />
             <Tab.Screen
                 name="Tratamiento"
-                
-                component={TreatmentScreen}
+                component={MedicinesScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <AntDesign name="medicinebox" size={24} color={color} />
                     ),
-                    title: 'Registro de Tratamiento'
+                    title: 'Tratamientos'
                 }}
             />
-            <Tab.Screen 
+            <Tab.Screen
                 name="Perfil"
                 component={ProfileScreen}
                 options={{
