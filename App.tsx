@@ -8,16 +8,19 @@ import LoginScreen from './features/auth/application/screens/login';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="Login"
           component={LoginScreen}
+          options={{headerShown:false}}
         />
         <Stack.Screen 
           name="Alarm Medice"
           component={MainScreen}
+          options={{headerShown:false}}
         />
       </Stack.Navigator>
     </NavigationContainer>

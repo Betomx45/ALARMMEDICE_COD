@@ -5,41 +5,41 @@ import { View, Text, TextInput, Button, StyleSheet, Image, ToastAndroid, Touchab
 import firebaseApp from '../../../../config/database/firebase';
 // import { theme } from '../core/theme'
 
-const showMessage = (message : string) => {
+const showMessage = (message: string) => {
   ToastAndroid.showWithGravity(
     message,
     ToastAndroid.LONG,
     ToastAndroid.CENTER,
   );
-} 
-
-type Props = {
-  navigation : any
 }
 
-const LoginScreen:FC<Props> = ({ navigation }) => {
+type Props = {
+  navigation: any
+}
+
+const LoginScreen: FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const onLogin = () => {
     const auth = getAuth(firebaseApp);
     signInWithEmailAndPassword(auth, email.toLocaleLowerCase(), password)
-    .then((userCredential) => {
-      console.log(userCredential);
-      console.log("Usuario autenticado");
-      showMessage("Usuario autenticado");
-      navigation.replace("Alarm Medice");
-    })
-    .catch((error) => {
-      console.log(error.message);
-      console.log(error);
-      showMessage(`Error al iniciar sesion: ${error.message}`);
-    });
+      .then((userCredential) => {
+        //console.log(userCredential);
+        //console.log("Usuario autenticado");
+        showMessage("Usuario autenticado");
+        navigation.replace("Alarm Medice");
+      })
+      .catch((error) => {
+        console.log(error.message);
+        console.log(error);
+        showMessage(`Error al iniciar sesion: ${error.message}`);
+      });
   }
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../../.././assets/temporaly.jpg')}
+        source={require('../../../.././assets/logo.png')}
         style={styles.logo}
       />
       <Text style={styles.title}>Iniciar Sesión</Text>
@@ -59,17 +59,19 @@ const LoginScreen:FC<Props> = ({ navigation }) => {
       />
       <View style={styles.forgotPassword}>
         <TouchableOpacity>
-          <Text style={styles.forgot}>Forgot your password ?</Text>
+          <Text style={styles.text}>Forgot your password ?</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.button}>
-      <Button 
-        title="Iniciar sesión" 
-        onPress={onLogin}
-      />
+        <Button
+          title="Iniciar sesión"
+          onPress={onLogin}
+        />
       </View>
       <View style={styles.row}>
-        <Text>You do not have an account yet ?</Text> 
+        <TouchableOpacity onPress={() => navigation.navigate('')}>
+          <Text style={styles.text}>You do not have an account yet ?</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -85,8 +87,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 199,
+    height: 120,
     marginBottom: 20,
   },
   title: {
@@ -106,18 +108,21 @@ const styles = StyleSheet.create({
   forgotPassword: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: 10
+    marginVertical: 10,
   },
-  forgot: {
+  text: {
     fontSize: 13,
+    fontWeight: '600',
     // color: theme.colors.secondary,
   },
   row: {
     flexDirection: 'row',
     marginTop: 20,
+    fontWeight: '600'
   },
   button: {
     width: '80%',
-    marginTop: 20
+    marginTop: 20,
+    borderRadius: 50
   }
 });
