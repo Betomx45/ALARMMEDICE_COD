@@ -18,7 +18,7 @@ export default function MainScreen({ }) {
         >
             <Tab.Screen
                 name="Medicines"
-                component={TreatmentScreen}
+                component={MedicinesScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="alarm-plus" size={size} color={color} />
@@ -28,7 +28,7 @@ export default function MainScreen({ }) {
             />
             <Tab.Screen
                 name="Tratamiento"
-                component={MedicinesScreen}
+                component={TreatmentScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <AntDesign name="medicinebox" size={24} color={color} />
