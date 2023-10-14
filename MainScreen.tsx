@@ -4,6 +4,7 @@ import MedicinesScreen from "./features/medicines/application/screens/medicinesS
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import ProfileScreen from "./features/users/application/screens/logout";
 import TreatmentScreen from "./features/treatments/application/screens/treatmentsScreen";
+import { StyleSheet, Text } from "react-native";
 
 
 const Tab = createBottomTabNavigator();
@@ -17,13 +18,13 @@ export default function MainScreen({ }) {
             }}
         >
             <Tab.Screen
-                name="Medicines"
+                name="Medicamentos"
                 component={MedicinesScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="alarm-plus" size={size} color={color} />
                     ),
-                    title: 'Medicamentos'
+                    tabBarLabel: 'Medicamentos'
                 }}
             />
             <Tab.Screen
@@ -49,3 +50,10 @@ export default function MainScreen({ }) {
         </Tab.Navigator>
     );
 }
+
+const styles = StyleSheet.create({
+    tabLabel: {
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
+});
