@@ -28,11 +28,14 @@ export default function App() {
     */
     <NavigationContainer>
     <Stack.Navigator>
-      <Stack.Screen 
-        name="Alarm Medice"
-        component={MainScreen}
-        options={{headerShown:false}}
-      />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+        />
+        <Stack.Screen 
+          name="Alarm Medice"
+          component={MainScreen}
+        />
     </Stack.Navigator>
   </NavigationContainer>
   );
