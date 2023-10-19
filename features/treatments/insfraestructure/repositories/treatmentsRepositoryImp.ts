@@ -13,7 +13,6 @@ class TreatmentsRepositoryImp extends TreatmentsRepository{
     }
 
     getTreatments(): Promise<TreatmentsResult> {
-        //invocar al datasource y pedirle la lista de personajes
         return this.datasource.getTreatments();
     }
 }

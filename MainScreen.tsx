@@ -6,7 +6,6 @@ import ProfileScreen from "./features/users/application/screens/logout";
 import TreatmentScreen from "./features/treatments/application/screens/treatmentsScreen";
 import { StyleSheet, Text } from "react-native";
 
-
 const Tab = createBottomTabNavigator();
 
 export default function MainScreen({ }) {
