@@ -8,6 +8,8 @@ class TreatmentsResult {
         treatments: Treatments[],
     ) {
         this.treatments=treatments;
+
+
     }
 }
 

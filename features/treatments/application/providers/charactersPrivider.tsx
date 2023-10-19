@@ -1,5 +1,6 @@
 import { FC, ReactNode, createContext, useContext, useReducer } from "react";
 import Treatments from "../../domain/entities/treatments";
+import Medicines from "../../domain/entities/medicamentos";
 import TreatmentsResult from "../../domain/entities/treatmentsResult";
 import TreatmentsRepositoryImp from "../../insfraestructure/repositories/treatmentsRepositoryImp";
 import TreatmentsDatasourceImp from "../../insfraestructure/datasources/treatmentsDatasourceImp";

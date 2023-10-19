@@ -5,7 +5,6 @@ import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import ProfileScreen from "./features/users/application/screens/logout";
 import TreatmentScreen from "./features/treatments/application/screens/treatmentsScreen";
 
-
 const Tab = createBottomTabNavigator();
 
 export default function MainScreen({ }) {
