@@ -14,8 +14,8 @@ type TreatmentsProps = {
 
 export default function TreatmentsCard(props: TreatmentsProps) {
     // Define un objeto de estilos para el estado
-    const fechaInicio: string = props.treatments.fechaInicio;
-    const fechaFinal: string = props.treatments.fechaFinal;
+    const fechaInicio: Date = props.treatments.fechaInicio;
+    const fechaFinal: Date = props.treatments.fechaFinal;
     const fechaFormateada1 = moment(fechaInicio);
     fechaFormateada1.locale('es')
     const fechaFormateada2 = moment(fechaFinal);

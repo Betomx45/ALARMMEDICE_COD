@@ -1,4 +1,5 @@
 import TreatmentsDatasource from "../../domain/datasources/treatmentsDatasource";
+import Treatments from "../../domain/entities/treatments";
 //import Character from "../../domain/entities/character";
 import TreatmentsResult from "../../domain/entities/treatmentsResult";
 import TreatmentsRepository from "../../domain/repositories/treatmentsRepository";
@@ -12,6 +13,10 @@ class TreatmentsRepositoryImp extends TreatmentsRepository{
         this.datasource = datasource;
     }
 
+    addTreatments(treatment: Treatments): Promise<Treatments> {
+        return this.datasource.addTreatments(treatment);
+    }
+    
     getTreatments(): Promise<TreatmentsResult> {
         return this.datasource.getTreatments();
     }

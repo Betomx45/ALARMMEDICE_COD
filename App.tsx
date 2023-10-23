@@ -26,19 +26,19 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
     */
+
     <NavigationContainer>
-    <Stack.Navigator>
+      <Stack.Navigator>
+        
         <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-        />
-        <Stack.Screen 
           name="Alarm Medice"
           component={MainScreen}
+          options={{headerShown:false}}
         />
-    </Stack.Navigator>
-  </NavigationContainer>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
+
 }
 
 const styles = StyleSheet.create({
