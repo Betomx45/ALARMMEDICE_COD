@@ -2,9 +2,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MedicinesScreen from "./features/medicines/application/screens/medicinesScreen";
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import ProfileScreen from "./features/users/application/screens/logout";
+import ProfileScreen from "./features/profile/application/screens/logout";
 import TreatmentScreen from "./features/treatments/application/screens/treatmentsScreen";
 import { StyleSheet, Text } from "react-native";
+import AddUserScreen from "./features/users/application/screens/addUsersScreen";
+import { Entypo } from '@expo/vector-icons'; 
 
 const Tab = createBottomTabNavigator();
 
@@ -34,6 +36,16 @@ export default function MainScreen({ }) {
                         <AntDesign name="medicinebox" size={24} color={color} />
                     ),
                     title: 'Tratamientos'
+                }}
+            />
+            <Tab.Screen
+                name="Usuarios"
+                component={AddUserScreen}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Entypo name="add-user" size={24} color={color} />
+                    ),
+                    title: 'Usuarios'
                 }}
             />
             <Tab.Screen
