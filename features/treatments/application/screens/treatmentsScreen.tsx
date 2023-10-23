@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import TreatmentsCard from './components/treatmentsCard';
-import { TreatmentsProvider, useTreatmentsState } from '../providers/charactersPrivider';
+import { TreatmentsProvider, useTreatmentsState } from '../providers/treatmentsProvider';
+import TreatmentsModal from './components/treamentsModal';
 
 
 const TreatmentScreenView = () => {
@@ -34,9 +35,11 @@ if (loading) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Estos son tus tratamientos:</Text>
+      <TreatmentsModal/>
       <ScrollView>
         {renderCards()}
       </ScrollView>
+
     </View>
   );
 }

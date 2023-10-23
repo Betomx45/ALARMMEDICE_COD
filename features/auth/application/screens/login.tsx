@@ -1,4 +1,3 @@
-
 import { useState, FC } from 'react';
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { View, Text, TextInput, Button, StyleSheet, Image, ToastAndroid, TouchableOpacity } from 'react-native';

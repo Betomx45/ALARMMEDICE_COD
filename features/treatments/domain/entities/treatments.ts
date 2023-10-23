@@ -1,26 +1,26 @@
 class Treatments {
-    id:number;
     nombreTratamiento:string;
-    fechaInicio:string;
-    fechaFinal: string;
+    fechaInicio:Date;
+    fechaFinal: Date;
     intervaloDosis: string;
     status: string;
+    id?:number;
 
 
     constructor(
-        id:number,
         nombreTratamiento:string,
-        fechaInicio:string,
-        fechaFinal: string,
+        fechaInicio:Date,
+        fechaFinal: Date,
         intervaloDosis: string,
         status: string,
+        id?:number,
     ){
-        this.id = id;
         this.nombreTratamiento = nombreTratamiento;
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
         this.intervaloDosis = intervaloDosis;
         this.status = status;
+        this.id= id;
     }
 }
 
