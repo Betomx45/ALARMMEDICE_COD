@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MedicinesScreen from "./features/medicines/application/screens/medicinesScreen";
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';

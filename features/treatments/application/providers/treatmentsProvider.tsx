@@ -1,3 +1,4 @@
+import React from 'react';
 import { FC, ReactNode, createContext, useContext, useReducer } from "react";
 import Treatments from "../../domain/entities/treatments";
 import Medicines from "../../domain/entities/medicamentos";

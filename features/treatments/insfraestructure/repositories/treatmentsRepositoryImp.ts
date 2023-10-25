@@ -17,7 +17,7 @@ class TreatmentsRepositoryImp extends TreatmentsRepository{
         return this.datasource.addTreatments(treatment);
     }
     
-    getTreatments(): Promise<TreatmentsResult> {
+   getTreatments(): Promise<TreatmentsResult> {
         return this.datasource.getTreatments();
     }
 }

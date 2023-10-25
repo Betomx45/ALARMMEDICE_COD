@@ -1,14 +1,17 @@
 class Medicines {
-    id:number;
+    id?:number;
     nombre:string;
+    descripcion:string;
 
 
     constructor(
-        id:number,
         nombre:string,
+        descripcion:string,
+        id?:number,
     ){
         this.id = id;
         this.nombre = nombre;
+        this.descripcion  = descripcion;
     }
 }
 

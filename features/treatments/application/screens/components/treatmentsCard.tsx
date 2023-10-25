@@ -5,6 +5,7 @@ import Treatments from '../../../domain/entities/treatments';
 import moment from 'moment';
 import 'moment/locale/es';
 import { TouchableOpacity } from 'react-native';
+import React from 'react';
 
 
 type TreatmentsProps = {
@@ -23,6 +24,8 @@ export default function TreatmentsCard(props: TreatmentsProps) {
 
     const nombreMes1: string = fechaFormateada1.format('DD [de] MMMM [de] YYYY');
     const nombreMes2: string = fechaFormateada2.format('DD [de] MMMM [de] YYYY');
+
+    
     return (
         <ScrollView>
             <Card>
