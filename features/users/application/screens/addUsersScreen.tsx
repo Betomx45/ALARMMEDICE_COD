@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import {Button, Input} from 'react-native-elements';
 import { AddUserProvider, useAddUserState } from "../providers/addUserProvider";
+import React from 'react';
 
 const AddUserView = () => {
 

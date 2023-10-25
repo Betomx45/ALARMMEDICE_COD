@@ -1,103 +1,207 @@
-import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import TreatmentsCard from './components/treatmentsCard';
-import { TreatmentsProvider, useTreatmentsState } from '../providers/treatmentsProvider';
-import TreatmentsModal from './components/treamentsModal';
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, Input } from 'react-native-elements';
+import { AddTreatmentsProvider, useAddTreatmentsState } from "../providers/addTreatments";
+import React from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Icon } from "@rneui/themed";
 
+const AddTreatmentsView = () => {
 
-const TreatmentScreenView = () => {
   const {
-    treatments,
     loading,
-    getTreatments
-} = useTreatmentsState();
+    saving,
+    treatments,
+    setTreatmentsProp,
+    saveTreatments
+  } = useAddTreatmentsState();
+  const [isModalVisible, setModalVisible] = React.useState(false);
+  const [treatmentName, setTreatmentName] = React.useState<string>('');
+  const [startDate, setStartDate] = React.useState<Date>(new Date());
+  const [endDate, setEndDate] = React.useState<Date>(new Date());
+  const [showStartDatePicker, setShowStartDatePicker] = React.useState<boolean>(false);
+  const [showEndDatePicker, setShowEndDatePicker] = React.useState<boolean>(false);
 
-const renderCards = () => {
-    if (treatments == null) {
-        return null;
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const handleRegistration = () => {
+
+  };
+
+  const showStartDate = () => {
+
+  };
+
+  const showEndDate = () => {
+    setShowEndDatePicker(true);
+  };
+
+  const handleStartDateChange = (event: Event, selectedDate?: Date) => {
+    setShowStartDatePicker(false);
+    if (selectedDate) {
+      setStartDate(selectedDate);
     }
-    return treatments?.map((treatment) => (
-        <TreatmentsCard key={`treatment${treatment.id}`} treatments={treatment} />
-    ))
-}
-useEffect(() => {
-  getTreatments()
-}, []);
+  };
 
-/*
-if (loading) {
-    return (
-        <View style={[styles.container, styles.horizontal]}>
-            <ActivityIndicator size={120} color="#00ff00" />
-        </View>
-    )
-}*/
+  const handleEndDateChange = (event: Event, selectedDate?: Date) => {
+    setShowEndDatePicker(false);
+    if (selectedDate) {
+      setEndDate(selectedDate);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Estos son tus tratamientos:</Text>
-      <TreatmentsModal/>
-      <ScrollView>
-        {renderCards()}
-      </ScrollView>
+      <Text style={styles.title}>
+        Registro de tratamiento
+      </Text>
+      <Input
+        label="Nombre del Tratamiento"
+        placeholder="tratamiento"
+        value={treatments?.nombreTratamiento || ''}
+        onChangeText={(text) => {
+          setTreatmentsProp('nombreTratamiento', text);
+        }}
+        inputContainerStyle={styles.inputContainer}
+        labelStyle={styles.inputLabel}
+        inputStyle={styles.input}
+      />
 
+      <View style={styles.datePickerContainer}>
+        <Text style={styles.dateLabel}>Fecha de Inicio:</Text>
+        <Icon
+          name="calendar"
+          size={12}
+          type="font-awesome"
+          onPress={showEndDate}
+        />
+        <Text style={styles.dateText}>{endDate.toDateString()}</Text>
+        {showEndDatePicker && (
+          <DateTimePicker
+            value={treatments?.fechaFinal || new Date()}
+            mode="date"
+            onChange={(date) => {
+              setTreatmentsProp('fechaFinal', date)
+            }}
+            display="spinner"
+          />
+        )}
+      </View>
+
+      <View style={styles.datePickerContainer}>
+        <Text style={styles.dateLabel}>Fecha de Fin:</Text>
+        <Icon
+          name="calendar"
+          size={12}
+          type="font-awesome"
+          onPress={showEndDate}
+        />
+        <Text style={styles.dateText}>{endDate.toDateString()}</Text>
+        {showEndDatePicker && (
+          <DateTimePicker
+            value={treatments?.fechaFinal || new Date()}
+            mode="date"
+            onChange={(date) => {
+              setTreatmentsProp('fechaFinal', date)
+            }}
+            display="spinner"
+          />
+        )}
+      </View>
+
+      <Input
+        label="Dosis"
+        placeholder="Ingresa el intervalo de dosis"
+        value={treatments?.intervaloDosis || ''}
+        onChangeText={(text) => {
+          setTreatmentsProp('intervaloDosis', text);
+        }}
+        inputContainerStyle={styles.inputContainer}
+        labelStyle={styles.inputLabel}
+        inputStyle={styles.input}
+      />
+      <Button
+        title="Registrar"
+        onPress={() => {
+          saveTreatments();
+        }}
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonTitle}
+      />
     </View>
   );
 }
 
-const TreatmentsScreen = (props: any) => (
-  <TreatmentsProvider>
-      <TreatmentScreenView {...props} />
-  </TreatmentsProvider>
+const AddTreatmentsScreen = (props: any) => (
+  <AddTreatmentsProvider>
+    <AddTreatmentsView {...props} />
+  </AddTreatmentsProvider>
 );
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
-    justifyContent: 'center'
+    backgroundColor: '#f0f0f0',
   },
-  inputContainerStyle: {
-    borderBottomWidth: 0,
+  title: {
+    marginBottom: 20,
+    fontSize: 30
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  input: {
     backgroundColor: 'white',
     borderRadius: 5,
     paddingHorizontal: 10,
-    marginVertical: 10,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#007bff',
+    marginTop: 20,
+  },
+  buttonTitle: {
+    fontSize: 18,
   },
   labelStyle: {
-    fontSize: 16,
+    fontSize: 12,
     color: '#333',
-    marginBottom: 5,
   },
   datePickerContainer: {
     flexDirection: 'row',
+    marginBottom: 3,
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 5,
+
   },
   dateLabel: {
-    fontSize: 16,
-    marginRight: 10,
-    color: '#333',
+    fontSize: 12,
+    fontWeight: '600',
+    marginRight: 8,
+    marginLeft: 8
   },
   dateText: {
     fontSize: 16,
     color: '#333',
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: '#007bff',
+    marginLeft: 10
   },
   text: {
-    fontSize: 20,
+    top: -45,
+    fontSize: 30,
     fontWeight: '600',
     justifyContent: 'center',
     color: 'black'
-},
-horizontal: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
   },
-
 });
 
-export default TreatmentsScreen;
+export default AddTreatmentsScreen;

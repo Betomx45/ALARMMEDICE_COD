@@ -1,13 +1,19 @@
-import { View, StyleSheet, Modal, TextInput } from 'react-native';
-import { Icon } from "@rneui/themed";
 import React, { useState } from 'react';
-import {Text} from '@rneui/base';
-import {Button, Input} from 'react-native-elements';
-import { TouchableOpacity } from 'react-native';
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTreatmentsProvider, useAddTreatmentsState } from '../../providers/addTreatments';
+import { Input } from 'react-native-elements';
+import { Icon } from '@rneui/base';
+import { TouchableOpacity } from 'react-native';
 
-const AddTreatmentsModalView = () => {
+const App = () => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [treatmentName, setTreatmentName] = useState<string>('');
+    const [startDate, setStartDate] = useState<Date>(new Date());
+    const [endDate, setEndDate] = useState<Date>(new Date());
+    const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false);
+    const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
+
     const {
         loading,
         saving,
@@ -15,19 +21,10 @@ const AddTreatmentsModalView = () => {
         setTreatmentsProp,
         saveTreatments
     } = useAddTreatmentsState();
-    
-    const [isModalVisible, setModalVisible] = useState(false);
-    const [treatmentName, setTreatmentName] = useState<string>('');
-    const [startDate, setStartDate] = useState<Date>(new Date());
-    const [endDate, setEndDate] = useState<Date>(new Date());
-    const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
-
 
     const toggleModal = () => {
-        setModalVisible(!isModalVisible);
+        setModalVisible(!modalVisible);
     };
-
     const handleRegistration = () => {
 
     };
@@ -53,14 +50,16 @@ const AddTreatmentsModalView = () => {
             setEndDate(selectedDate);
         }
     };
-
     return (
-        <View style={styles.btn}>
-            <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
-                <Icon name="add" size={26} color="white" style={styles.icon} />
-            </TouchableOpacity>
-
-            <Modal visible={isModalVisible} animationType="slide">
+        <View style={styles.centeredView}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}>
                 <View style={styles.modalContent}>
                     <Text style={styles.text}>Registrar nuevo tratamiento</Text>
                     <Input
@@ -69,7 +68,7 @@ const AddTreatmentsModalView = () => {
                         value={treatments?.nombreTratamiento || ''}
                         onChangeText={(text) => {
                             setTreatmentsProp('nombreTratamiento', text);
-                          }}
+                        }}
                         labelStyle={styles.labelStyle}
                         inputContainerStyle={styles.inputContainerStyle}
                     />
@@ -135,104 +134,134 @@ const AddTreatmentsModalView = () => {
                         placeholder="Ingrese la frecuencia"
                         inputContainerStyle={styles.inputContainerStyle}
                     />
-                    <View style={styles.buttonContainer}>
-                        <Button title="Guardar" onPress={() => { saveTreatments();}} />
-                        <Button title="Cancelar" onPress={toggleModal} type="outline"/>
-                    </View>
+
                 </View>
             </Modal>
+            <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
+                <Icon name="add" size={26} color="white" style={styles.icon} />
+            </TouchableOpacity>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    // ... (otros estilos)
-    addButton: {
-        backgroundColor: 'black',
-        borderRadius: 25,
-        width: 40,
-        height: 40,
-        position: 'absolute',
-        alignItems: 'center',
-        justifyContent: 'center',
-        bottom: 20,
-        right: 20,
-    },
-    btn: {
-        top: 26,
-    },
-    icon: {
-        color: 'white',
-        fontSize: 24,
-    },
-    modalContent: {
+    centeredView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 22,
     },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    container: {
-        flex: 1,
-        padding: 4,
-        backgroundColor: '#f0f0f0',
-    },
-    input: {
+    modalView: {
+        margin: 20,
         backgroundColor: 'white',
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        fontSize: 16,
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
     button: {
-        marginTop: 20,
-        backgroundColor: '#007bff',
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
     },
-    inputContainerStyle: {
-        borderBottomWidth: 0,
-        backgroundColor: 'white',
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginVertical: 10,
+    buttonOpen: {
+        backgroundColor: '#F194FF',
     },
-    labelStyle: {
-        fontSize: 12,
-        color: '#333',
+    buttonClose: {
+        backgroundColor: '#2196F3',
     },
-    datePickerContainer: {
-        flexDirection: 'row',
-        marginBottom: 3,
-        alignItems: 'center',
-        marginVertical: 5,
-
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
-    dateLabel: {
-        fontSize: 12,
-        fontWeight: '600',
-        marginRight: 8,
-        marginLeft: 8
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
     },
-    dateText: {
-        fontSize: 16,
-        color: '#333',
-        marginLeft: 10
-    },
-    text: {
-        top: -45,
-        fontSize: 30,
-        fontWeight: '600',
-        justifyContent: 'center',
-        color: 'black'
-    },
+        // ... (otros estilos)
+        addButton: {
+            backgroundColor: 'black',
+            borderRadius: 25,
+            width: 40,
+            height: 40,
+            position: 'absolute',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bottom: 20,
+            right: 20,
+        },
+        btn: {
+            top: 26,
+        },
+        icon: {
+            color: 'white',
+            fontSize: 24,
+        },
+        modalContent: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        buttonContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 10,
+        },
+        container: {
+            flex: 1,
+            padding: 4,
+            backgroundColor: '#f0f0f0',
+        },
+        input: {
+            backgroundColor: 'white',
+            borderRadius: 5,
+            paddingHorizontal: 10,
+            fontSize: 16,
+        },
+        inputContainerStyle: {
+            borderBottomWidth: 0,
+            backgroundColor: 'white',
+            borderRadius: 5,
+            paddingHorizontal: 10,
+            marginVertical: 10,
+        },
+        labelStyle: {
+            fontSize: 12,
+            color: '#333',
+        },
+        datePickerContainer: {
+            flexDirection: 'row',
+            marginBottom: 3,
+            alignItems: 'center',
+            marginVertical: 5,
+    
+        },
+        dateLabel: {
+            fontSize: 12,
+            fontWeight: '600',
+            marginRight: 8,
+            marginLeft: 8
+        },
+        dateText: {
+            fontSize: 16,
+            color: '#333',
+            marginLeft: 10
+        },
+        text: {
+            top: -45,
+            fontSize: 30,
+            fontWeight: '600',
+            justifyContent: 'center',
+            color: 'black'
+        },
 });
 
-const AddTreatmentsModal = (props: any) => (
-    <AddTreatmentsProvider>
-        <AddTreatmentsModal {...props} />
-    </AddTreatmentsProvider>
-);
-
-
-export default AddTreatmentsModalView;
+export default App;

@@ -1,121 +1,129 @@
 import { FC, ReactNode, createContext, useContext, useReducer } from "react";
 import Treatments from "../../domain/entities/treatments";
-import Medicines from "../../domain/entities/medicamentos";
-import TreatmentsResult from "../../domain/entities/treatmentsResult";
 import TreatmentsRepositoryImp from "../../insfraestructure/repositories/treatmentsRepositoryImp";
 import TreatmentsDatasourceImp from "../../insfraestructure/datasources/treatmentsDatasourceImp";
+import React from 'react';
+import Medicines from "../../domain/entities/medicamentos";
 
 
-
-// definir la estrucutura que tendra el context
 interface ContextDefinition {
-    // definición de estado
-    loading: boolean,
-    saving: boolean,
-    message?: undefined,
-    treatment: Treatments,
-
-    // acciones que tendrá el context
-    setTreatmentsProp: (property: string, value: any) => void;
+  loading : boolean,
+  saving : boolean,
+  message? : string,
+  treatments : Treatments,
+  setTreatmentsProp: (property: string, value: any) => void,
+  saveTreatments: () => void,
 }
 
-// crear el objeto context de React
-const AddTreatmentsContext = createContext({} as ContextDefinition);
+const AddTreatmentsContext = createContext({} as ContextDefinition)
 
-// estrucutura del estado
-// debe coincidir con la estructura del context
-// no lleva accione                                                                                                                                                                                     s
-// el state represneta los valores
 interface AddTreatmentsState {
-    loading: boolean,
-    saving: boolean,
-    message?: undefined,
-    treatment: Treatments,
+  loading : boolean,
+  saving : boolean,
+  message? : string,
+  treatments : Treatments,
 }
 
-// definir los tipos de acciones que podrá ejecutar el context / provider
-type AddTreatmentsActionType =
-    | { type: "Set Loading"; payload: boolean }
-    | { type: "Set Saving"; payload: boolean }
-    | { type: "Set Treatments"; payload: Treatments };
+type AddTreatmentsActionType = 
+  { type: 'Set Loading', payload: boolean }
+  | { type: 'Set Saving', payload: boolean }
+  | { type: 'Set Treatments', payload: Treatments }
 
-// inciializar el state
-const initialState: AddTreatmentsState = {
-    loading: false,
-    saving: false,
-    message: undefined,
-    treatment: new Treatments('',new Date(),new Date(),'',''),
-};
+const initialState : AddTreatmentsState = {
+  loading: false,
+  saving: false,
+  message: undefined,
+  treatments: new Treatments(
+    '',
+    new Date(),
+    new Date(), 
+    '',
+    new Medicines('Pearls', 'Lactobacilus')
+  ),
+}
 
-// definición del reducer
-// se encarga de manipular el state con base en
-// las acciones y datos recibidos (payload)
 function addTreatmentsReducer(
-    state: AddTreatmentsState,
-    action: AddTreatmentsActionType
+  state: AddTreatmentsState,
+  action: AddTreatmentsActionType
 ) {
-    switch (action.type) {
-        case "Set Loading":
-            return { ...state, loading: action.payload };
+  switch (action.type) {
+    case "Set Loading":
+      return { 
+        ...state, 
+        loading: action.payload 
+      };
 
-        case "Set Saving":
-            return {
-                ...state,
-                saving: action.payload,
+    case "Set Saving":
+      return {
+        ...state,
+        saving: action.payload,
+      };
 
-                // otras manipulaciones de estado
-            };
-        case "Set Treatments":
-            return {
-                ...state,
-                treatments: action.payload,
+    case "Set Treatments":
+      return {
+        ...state,
+        treatments: action.payload,
+      }  
 
-                // otras manipulaciones de estado
-            };
-
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 }
 
-// implementar el proveedor de estado para Characters
 type Props = {
-    children?: ReactNode
+  children?: ReactNode
 }
 
 const AddTreatmentsProvider: FC<Props> = ({ children }) => {
-    const [state, dispatch] = useReducer(addTreatmentsReducer, initialState);
+  const [state, dispatch] = useReducer(addTreatmentsReducer, initialState);
 
-    // acciones 
-    function setTreatmentsProp(property: string, value: any) {
-        dispatch({
-            type:'Set Treatments',
-            payload:{
-                ...state.treatment,
-                [property]: value,
-            }
-        })
-    }
-    // retornar la estructura del provider
-    return (
-        <AddTreatmentsContext.Provider value={{
-            ...state,
-            setTreatmentsProp,
-        }}>
-            {children}
-        </AddTreatmentsContext.Provider>
-    )
+  function setTreatmentsProp (property: string, value: any) {
+    dispatch({
+      type: 'Set Treatments',
+      payload: {
+        ...state.treatments,
+        [property]: value,
+      }
+    });
+  }
 
+  async function saveTreatments () {
+
+    const TreatmentsRepository = new TreatmentsRepositoryImp(
+      new TreatmentsDatasourceImp()
+    ); 
+
+    dispatch({
+      type: 'Set Saving',
+      payload: true
+    });
+
+    const saveTreatments = await TreatmentsRepository.addTreatments(state.treatments);
+    console.log(saveTreatments);
+    dispatch({
+      type: 'Set Saving',
+      payload: false
+    });
+  }
+
+  return (
+    <AddTreatmentsContext.Provider value={{
+      ...state,
+      setTreatmentsProp,
+      saveTreatments,
+    }}>
+      {children}
+    </AddTreatmentsContext.Provider>
+  )
 };
 
 function useAddTreatmentsState() {
-    const context = useContext(AddTreatmentsContext);
-    if (context === undefined) {
-        throw new Error("useAddTreatmentsState debe ser usado" +
-            " con un AddTreatmentsProvider");
-    }
-
-    return context;
+  const context = useContext(AddTreatmentsContext);
+  if (context === undefined) {
+    throw new Error("useAddTreatmentsState debe ser usado" +
+      " con un AddTreatmentsProvider");
+  }
+  return context;
 }
 
 export { AddTreatmentsProvider, useAddTreatmentsState };
