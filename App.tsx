@@ -33,7 +33,8 @@ export default function App() {
         <Stack.Screen
           name="Alarm Medice"
           component={MainScreen}
-          options={{headerShown:false}}
+          options={{headerShown:false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

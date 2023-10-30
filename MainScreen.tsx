@@ -6,11 +6,11 @@ import ProfileScreen from "./features/profile/application/screens/logout";
 import TreatmentScreen from "./features/treatments/application/screens/treatmentsScreen";
 import { StyleSheet, Text } from "react-native";
 import AddUserScreen from "./features/users/application/screens/addUsersScreen";
-import { Entypo } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainScreen({ }) {
+const MainScreen = ({ }) => {
     return (
         <Tab.Navigator
             initialRouteName="Alarm Medicine"
@@ -18,6 +18,7 @@ export default function MainScreen({ }) {
                 tabBarActiveTintColor: '#002BD9',
             }}
         >
+
             <Tab.Screen
                 name="Medicamentos"
                 component={MedicinesScreen}
@@ -25,9 +26,10 @@ export default function MainScreen({ }) {
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="alarm-plus" size={size} color={color} />
                     ),
-                    tabBarLabel: 'Medicamentos'
+                    tabBarLabel: 'Medicamentos',
                 }}
             />
+
             <Tab.Screen
                 name="Tratamiento"
                 component={TreatmentScreen}
@@ -35,9 +37,11 @@ export default function MainScreen({ }) {
                     tabBarIcon: ({ color, size }) => (
                         <AntDesign name="medicinebox" size={24} color={color} />
                     ),
-                    title: 'Tratamientos'
+                    title: 'Tratamientos',
+                    
                 }}
             />
+
             <Tab.Screen
                 name="Usuarios"
                 component={AddUserScreen}
@@ -48,6 +52,7 @@ export default function MainScreen({ }) {
                     title: 'Usuarios'
                 }}
             />
+
             <Tab.Screen
                 name="Perfil"
                 component={ProfileScreen}
@@ -58,6 +63,7 @@ export default function MainScreen({ }) {
                     headerShown: false
                 }}
             />
+
         </Tab.Navigator>
     );
 }
@@ -68,3 +74,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
+
+export default MainScreen;

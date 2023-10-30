@@ -5,6 +5,7 @@ import { View, Text, TextInput, Button, StyleSheet, Image, ToastAndroid, Touchab
 import firebaseApp from '../../../../config/database/firebase';
 import { Avatar, ButtonGroup, ListItem } from '@rneui/base';
 import { Divider, useTheme, Input } from '@rneui/themed';
+import React from 'react';
 // import { theme } from '../core/theme'
 
 const showMessage = (message : string) => {
