@@ -1,10 +1,15 @@
+import backendConfig from "../../../../config/backend/config";
 import MedicinesDatasource from "../../domain/datasources/medicinesDatasource";
 import Medicine from "../../domain/entities/medicine";
 import MedicinesResult from "../../domain/entities/medicinesResult";
 
 class MedicinesDatasourceImp extends MedicinesDatasource {
     getMedicines(): Promise<MedicinesResult> {
+
+        return fetch(`${backendConfig.url}/api/medicine`)
+
         return fetch('http://192.168.100.75:3000/api/medicine')
+
         .then((response) => response.json())
         .then((response) => {
             const medicines = response.map((item : any) => new Medicine(

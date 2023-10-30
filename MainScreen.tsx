@@ -43,6 +43,7 @@ const MainScreen = ({ }) => {
             />
 
             <Tab.Screen
+
                 name="Usuarios"
                 component={AddUserScreen}
                 options={{
@@ -54,13 +55,14 @@ const MainScreen = ({ }) => {
             />
 
             <Tab.Screen
+
                 name="Perfil"
                 component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <AntDesign name="profile" size={size} color={color} />
                     ),
-                    headerShown: false
+                    title: 'Perfil'
                 }}
             />
 
