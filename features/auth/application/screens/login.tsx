@@ -2,6 +2,9 @@ import { useState, FC } from 'react';
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { View, Text, TextInput, Button, StyleSheet, Image, ToastAndroid, TouchableOpacity } from 'react-native';
 import firebaseApp from '../../../../config/database/firebase';
+import React from 'react';
+import AddUserScreen from '../../../users/application/screens/addUsersScreen';
+
 // import { theme } from '../core/theme'
 
 const showMessage = (message: string) => {
@@ -68,8 +71,9 @@ const LoginScreen: FC<Props> = ({ navigation }) => {
         />
       </View>
       <View style={styles.row}>
-        <TouchableOpacity onPress={() => navigation.navigate('')}>
-          <Text style={styles.text}>You do not have an account yet ?</Text>
+      <Text style={styles.label}>Don’t have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -90,6 +94,8 @@ const styles = StyleSheet.create({
     height: 120,
     marginBottom: 20,
   },
+  label: {fontWeight: '600',},
+  link: {},
   title: {
     fontSize: 24,
     fontWeight: 'bold',

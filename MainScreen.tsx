@@ -39,23 +39,13 @@ export default function MainScreen({ }) {
                 }}
             />
             <Tab.Screen
-                name="Usuarios"
-                component={AddUserScreen}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Entypo name="add-user" size={24} color={color} />
-                    ),
-                    title: 'Usuarios'
-                }}
-            />
-            <Tab.Screen
                 name="Perfil"
                 component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <AntDesign name="profile" size={size} color={color} />
                     ),
-                    headerShown: false
+                    title: 'Perfil'
                 }}
             />
         </Tab.Navigator>

@@ -1,6 +1,5 @@
 import { FC, ReactNode, createContext, useContext, useReducer } from "react";
 import User from "../../domain/entities/user";
-import UsersRepository from "../../domain/repositories/usersRepository";
 import UsersRepositoryImp from "../../infraestructure/repositories/usersRepositoryImp";
 import UsersDatasourceImp from "../../infraestructure/datasources/usersDatasourceImp";
 import React from 'react';
@@ -8,8 +7,10 @@ import React from 'react';
 interface ContextDefinition {
   loading : boolean,
   saving : boolean,
-  message? : string,
+  message : string | null,
   user : User,
+  errors : any,
+  success : boolean,
 
   setUserProp: (property: string, value: any) => void,
   saveUser: () => void,
@@ -20,25 +21,39 @@ const AddUserContext = createContext({} as ContextDefinition)
 interface AddUserState {
   loading : boolean,
   saving : boolean,
-  message? : string,
+  message : string | null,
   user : User,
+  errors : any,
+  success : boolean,
 }
 
 type AddUserActionType = 
   { type: 'Set Loading', payload: boolean }
   | { type: 'Set Saving', payload: boolean }
   | { type: 'Set User', payload: User }
+  | { type: 'Set Message', payload: string | null }
+  | { type: 'Set Errors', payload: {
+      message: string,
+      errors: any,
+    } }
+  | { type: 'Set Success', payload: {
+      success: boolean, 
+      user?: User,
+      message: string
+    } }
 
 const initialState : AddUserState = {
   loading: false,
   saving: false,
-  message: undefined,
+  message: null,
+  success : false,
   user: new User(
     '',
     '',
     '', 
     undefined,
   ),
+  errors : {},
 }
 
 function addUserReducer(
@@ -46,6 +61,12 @@ function addUserReducer(
   action: AddUserActionType
 ) {
   switch (action.type) {
+    case 'Set Message':
+      return { 
+        ...state, 
+        message: action.payload 
+      };
+
     case "Set Loading":
       return { 
         ...state, 
@@ -62,8 +83,24 @@ function addUserReducer(
       return {
         ...state,
         user: action.payload,
-      }  
+      };
+    
+    case "Set Errors":
+      return {
+        ...state,
+        errors: action.payload.errors || {},
+        message: action.payload.message,
+        saving: false,
+      };
 
+    case "Set Success":
+      return {
+        ...state,
+        success: action.payload.success,
+        message: action.payload.message,
+        errors: {},
+        saving: false,
+      };
     default:
       return state;
   }
@@ -87,7 +124,6 @@ const AddUserProvider: FC<Props> = ({ children }) => {
   }
 
   async function saveUser () {
-
     const usersRepository = new UsersRepositoryImp(
       new UsersDatasourceImp()
     ); 
@@ -97,11 +133,30 @@ const AddUserProvider: FC<Props> = ({ children }) => {
       payload: true
     });
 
-    const saveUser = await usersRepository.addUsers(state.user);
-    console.log(saveUser);
+    const result = await usersRepository.addUsers(state.user);
+    if(result.user) {
+      dispatch({
+        type: 'Set Success',
+        payload: {
+          success: true,
+          user: result.user,
+          message: result.message,
+        },
+      });
+      return;
+    }
+
+    let errors : any = {};
+    result.errors?.forEach((item) => {
+      errors[item.fiel] = item.error;
+    });
+
     dispatch({
-      type: 'Set Saving',
-      payload: false
+      type: 'Set Errors',
+      payload: {
+        message: result.message,
+        errors,
+      }
     });
   }
 

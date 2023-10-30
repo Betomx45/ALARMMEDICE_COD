@@ -1,10 +1,11 @@
 import backendConfig from "../../../../config/backend/config";
 import UsersDatasource from "../../domain/datasources/userDatasource";
+import AddUsersResult from "../../domain/entities/addUserResult";
 import User from "../../domain/entities/user";
 import UsersResult from "../../domain/entities/usersResult";
 
 class UsersDatasourceImp extends UsersDatasource {
-  async addUsers(user : User) : Promise<User> {
+  async addUsers(user : User) : Promise<AddUsersResult> {
     return fetch(`${backendConfig.url}/api/users`, {
       method: "POST",
       body: JSON.stringify(user),
@@ -15,7 +16,11 @@ class UsersDatasourceImp extends UsersDatasource {
     .then((response) => response.json())
     .then((response) => {
       console.log(response);
-      return user;
+      const result = new AddUsersResult(response.message, response.user || null);
+      result.errors = response.errors || null;
+      result.error = response.error || false;
+
+      return result;
     });
   }
 
