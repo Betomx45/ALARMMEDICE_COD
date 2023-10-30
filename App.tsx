@@ -27,16 +27,6 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
     
-
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen
-    //       name="Alarm Medice"
-    //       component={MainScreen}
-    //       options={{headerShown:false}}
-    //     />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
   );
 
 }

@@ -4,42 +4,62 @@ import TreatmentsRepositoryImp from "../../insfraestructure/repositories/treatme
 import TreatmentsDatasourceImp from "../../insfraestructure/datasources/treatmentsDatasourceImp";
 import React from 'react';
 import Medicines from "../../domain/entities/medicamentos";
+import Treatment from "../../domain/entities/treatments";
 
 
 interface ContextDefinition {
-  loading : boolean,
-  saving : boolean,
-  message? : string,
-  treatments : Treatments,
+  loading: boolean,
+  saving: boolean,
+  success: boolean,
+  message: string | null,
+  treatments: Treatments,
+  errors: any,
   setTreatmentsProp: (property: string, value: any) => void,
   saveTreatments: () => void,
 }
-
 const AddTreatmentsContext = createContext({} as ContextDefinition)
 
 interface AddTreatmentsState {
-  loading : boolean,
-  saving : boolean,
-  message? : string,
-  treatments : Treatments,
+  loading: boolean,
+  saving: boolean,
+  success: boolean,
+  message: string | null,
+  treatments: Treatments,
+  errors: any
 }
 
-type AddTreatmentsActionType = 
+type AddTreatmentsActionType =
   { type: 'Set Loading', payload: boolean }
   | { type: 'Set Saving', payload: boolean }
   | { type: 'Set Treatments', payload: Treatments }
+  | { type: 'Set Message', payload: string | null }
+  | {
+    type: 'Set Errors', payload: {
+      message: string,
+      errors: any
+    }
+  }
+  | {
+    type: 'Set Success', payload: {
+      success: boolean,
+      treatment?: Treatments,
+      message: string,
+    }
+  }
 
-const initialState : AddTreatmentsState = {
+const initialState: AddTreatmentsState = {
   loading: false,
   saving: false,
-  message: undefined,
+  success: false,
+  message: null,
   treatments: new Treatments(
     '',
     new Date(),
-    new Date(), 
+    new Date(),
     '',
-    new Medicines('Pearls', 'Lactobacilus')
+    new Medicines('Pearls', 'Tomar una al dia')
   ),
+  errors: {}
 }
 
 function addTreatmentsReducer(
@@ -47,29 +67,46 @@ function addTreatmentsReducer(
   action: AddTreatmentsActionType
 ) {
   switch (action.type) {
+    case "Set Message":
+      return {
+        ...state,
+        message: action.payload
+      }
     case "Set Loading":
-      return { 
-        ...state, 
-        loading: action.payload 
+      return {
+        ...state,
+        loading: action.payload
       };
-
     case "Set Saving":
       return {
         ...state,
         saving: action.payload,
       };
-
     case "Set Treatments":
       return {
         ...state,
         treatments: action.payload,
-      }  
-
+      };
+    case "Set Errors":
+      return {
+        ...state,
+        errors: action.payload.errors || {},
+        message: action.payload.message,
+        saving: false
+      };
+    case "Set Success":
+      return {
+        ...state,
+        success: action.payload.success,
+        message: action.payload.message,
+        error: {},
+        saving: false,
+        //treatment: action.payload.treatments || state.treatments
+      };
     default:
       return state;
   }
 }
-
 type Props = {
   children?: ReactNode
 }
@@ -77,7 +114,7 @@ type Props = {
 const AddTreatmentsProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(addTreatmentsReducer, initialState);
 
-  function setTreatmentsProp (property: string, value: any) {
+  function setTreatmentsProp(property: string, value: any) {
     dispatch({
       type: 'Set Treatments',
       payload: {
@@ -87,23 +124,47 @@ const AddTreatmentsProvider: FC<Props> = ({ children }) => {
     });
   }
 
-  async function saveTreatments () {
+  async function saveTreatments() {
 
     const TreatmentsRepository = new TreatmentsRepositoryImp(
       new TreatmentsDatasourceImp()
-    ); 
+    );
 
     dispatch({
       type: 'Set Saving',
       payload: true
     });
 
-    const saveTreatments = await TreatmentsRepository.addTreatments(state.treatments);
-    console.log(saveTreatments);
-    dispatch({
-      type: 'Set Saving',
-      payload: false
+    const result = await TreatmentsRepository.addTreatments(state.treatments);
+
+    if (result.treatment) {
+
+      dispatch({
+        type: 'Set Success',
+        payload: {
+          success: true,
+          treatment: result.treatment,
+          message: result.message,
+        }
+      });
+      return;
+    }
+
+    let errors: any = {};
+
+    result.errors?.forEach((item) => {
+      errors[item.field] = item.error;
     });
+
+
+    dispatch({
+      type: 'Set Errors',
+      payload: {
+        message: result.message,
+        errors,
+      }
+    });
+
   }
 
   return (

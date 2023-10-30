@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView } from 'react-native';
 import { MedicinesProvider, useMedicinesState } from '../providers/medicinesProvider';
 import MedicineCard from './components/medicineCard';
 import { useEffect } from 'react';
+import React from 'react';
 
 
 const MedicinesScreenView = () => {

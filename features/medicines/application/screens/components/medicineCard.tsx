@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native"
 import Medicine from "../../../domain/entities/medicine"
 import { Button, Card, Icon } from "@rneui/base";
+import React from 'react';
 
 type CardProps = {
     medicine : Medicine,
