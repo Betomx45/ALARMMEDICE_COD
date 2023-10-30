@@ -1,4 +1,3 @@
-import Medicines from "./medicamentos";
 
 class Treatment {
   id?: number;
@@ -7,14 +6,23 @@ class Treatment {
   fechaFinal: Date;
   intervaloDosis: string;
   status?: string;
-  medicamento: Medicines;
+  medicamento:{
+    id?:number,
+    nombre:string,
+    descripcion:string,
+  } ;
 
   constructor(
     nombreTratamiento: string,
     fechaInicio: Date,
     fechaFinal: Date,
     intervaloDosis: string,
-    medicamento: Medicines,
+    medicamento: {
+      nombre:string,
+      descripcion:string,
+      id?:number
+
+    },
     status?: string,
     id?: number
   ) {

@@ -3,7 +3,7 @@ import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { View, Text, TextInput, Button, StyleSheet, Image, ToastAndroid, TouchableOpacity } from 'react-native';
 import firebaseApp from '../../../../config/database/firebase';
 // import { theme } from '../core/theme'
-
+import React from "react"
 const showMessage = (message: string) => {
   ToastAndroid.showWithGravity(
     message,

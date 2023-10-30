@@ -1,36 +1,36 @@
 import React, { useState } from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
+import { Modal, StyleSheet, Text, TextInput, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { AddTreatmentsProvider, useAddTreatmentsState } from '../../providers/addTreatments';
-import { Input } from 'react-native-elements';
-import { Icon } from '@rneui/base';
-import { TouchableOpacity } from 'react-native';
+import { useAddTreatmentsState, AddTreatmentsProvider } from '../../providers/addTreatments';
+import { Icon, Button } from "@rneui/base";
 
-const App = () => {
-    const [modalVisible, setModalVisible] = useState(false);
-    const [treatmentName, setTreatmentName] = useState<string>('');
+interface CustomModalProps {
+    modalVisible: boolean;
+    setModalVisible: (visible: boolean) => void;
+}
+
+const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVisible }) => {
+    const {
+        treatments,
+        message,
+        errors,
+        success,
+        saving,
+        loading,
+        setTreatmentsProp,
+        saveTreatments
+    } = useAddTreatmentsState();
+
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [endDate, setEndDate] = useState<Date>(new Date());
     const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
 
-    const {
-        loading,
-        saving,
-        treatments,
-        setTreatmentsProp,
-        saveTreatments
-    } = useAddTreatmentsState();
-
-    const toggleModal = () => {
-        setModalVisible(!modalVisible);
+    const showEndModal = () => {
+        setModalVisible(false);
     };
-    const handleRegistration = () => {
-
-    };
-
     const showStartDate = () => {
-
+        setShowEndDatePicker(false);
     };
 
     const showEndDate = () => {
@@ -50,29 +50,37 @@ const App = () => {
             setEndDate(selectedDate);
         }
     };
+
     return (
-        <View style={styles.centeredView}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                    setModalVisible(!modalVisible);
-                }}>
-                <View style={styles.modalContent}>
-                    <Text style={styles.text}>Registrar nuevo tratamiento</Text>
-                    <Input
-                        label="Nombre del Tratamiento"
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+                setModalVisible(false);
+            }}
+        >
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+
+                    <Text style={styles.modalTitle}>Registrar nuevo tratamiento</Text>
+
+                    <Text style={success ? styles.success : styles.alert}>{message}</Text>
+
+
+                    <Text style={styles.textLabel}>Nombre del tratamiento:</Text>
+                    
+                    <TextInput
+                        style={[styles.input, (errors?.nombreTratamiento ? styles.textError : null)]}
                         placeholder="Ingrese el nombre del tratamiento"
                         value={treatments?.nombreTratamiento || ''}
                         onChangeText={(text) => {
                             setTreatmentsProp('nombreTratamiento', text);
                         }}
-                        labelStyle={styles.labelStyle}
-                        inputContainerStyle={styles.inputContainerStyle}
-                    />
-
+                    ></TextInput>
+                    {errors?.nombreTratamiento ? (
+                        <Text style={styles.textError}>{errors.nombreTratamiento}</Text>
+                    ) : null}
                     <View style={styles.datePickerContainer}>
                         <Text style={styles.dateLabel}>Fecha de Inicio:</Text>
                         <Icon
@@ -114,35 +122,63 @@ const App = () => {
                             />
                         )}
                     </View>
-
-                    <Input
-                        label="Nombre del Medicamento"
-                        labelStyle={styles.labelStyle}
-                        placeholder="Ingrese el nombre del medicamento"
-                        inputContainerStyle={styles.inputContainerStyle}
-                    />
-
-                    <Input
-                        label="Descripción"
-                        labelStyle={styles.labelStyle}
-                        placeholder="Ingrese la dosis"
-                        inputContainerStyle={styles.inputContainerStyle}
-                    />
-                    <Input
-                        label="Dosis"
-                        labelStyle={styles.labelStyle}
+                    <Text style={styles.textLabel}>Intervalo de dosis:</Text>
+                    <TextInput
+                        style={[styles.input, (errors?.intervaloDosis ? styles.textError : null)]}
                         placeholder="Ingrese la frecuencia"
-                        inputContainerStyle={styles.inputContainerStyle}
+                        value={treatments?.intervaloDosis || ''}
+                        onChangeText={(text) => {
+                            setTreatmentsProp('intervaloDosis', text);
+                        }}
+                    ></TextInput>
+                    {errors?.intervaloDosis ? (
+                        <Text style={styles.textError}>{errors.intervaloDosis}</Text>
+                    ) : null}
+
+                    <Text style={styles.textLabel}>Nombre del medicamento:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Ingrese el nombre del medicamento"
                     />
 
+                    <Text style={styles.textLabel}>Descripción del medicamento:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Escriba la descripción"
+                    />
+                    <View style={styles.buttonContainer}>
+                        <Button
+                            title="Guardar"
+                            buttonStyle={styles.saveButton}
+                            onPress={() => { saveTreatments(); }}
+                            icon={
+                                <View style={styles.buttonIconContainer}>
+                                    <Icon name="content-save" type="material-community" size={18} color="white" />
+                                </View>
+                            }
+                        />
+                        <Button
+                            title="Cancelar"
+                            buttonStyle={styles.cancelButton}
+                            onPress={showEndModal}
+                            icon={
+                                <View style={styles.buttonIconContainer}>
+                                    <Icon name="cancel" type="material-community" size={18} color="white" />
+                                </View>
+                            }
+                        />
+                    </View>
                 </View>
-            </Modal>
-            <TouchableOpacity style={styles.addButton} onPress={toggleModal}>
-                <Icon name="add" size={26} color="white" style={styles.icon} />
-            </TouchableOpacity>
-        </View>
+            </View>
+        </Modal>
     );
 };
+
+const CustomModal = (props: any) => (
+    <AddTreatmentsProvider>
+        <CustomModalView {...props}></CustomModalView>
+    </AddTreatmentsProvider>
+)
 
 const styles = StyleSheet.create({
     centeredView: {
@@ -156,7 +192,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 20,
         padding: 35,
-        alignItems: 'center',
+        alignItems: 'baseline',
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -166,102 +202,67 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
     },
-    button: {
-        borderRadius: 20,
+    input: {
+        backgroundColor: 'white',
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        fontSize: 16,
+        marginBottom: 20,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: 'black',
+        marginBottom: 33
+    },
+    datePickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 11,
+    },
+    dateLabel: {
+        fontSize: 12,
+        fontWeight: '600',
+        marginRight: 8,
+        marginLeft: 8,
+    },
+    dateText: {
+        fontSize: 16,
+        color: '#333',
+        marginLeft: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        marginTop: 10,
+    },
+    saveButton: {
+        backgroundColor: '#007BFF',
         padding: 10,
-        elevation: 2,
+        borderRadius: 10,
+        marginRight: 22,
     },
-    buttonOpen: {
-        backgroundColor: '#F194FF',
+    cancelButton: {
+        backgroundColor: '#FF0000',
+        padding: 10,
+        borderRadius: 10,
+        marginLeft: 22,
     },
-    buttonClose: {
-        backgroundColor: '#2196F3',
+    buttonIconContainer: {
+        marginRight: 8, // Espacio entre el icono y el texto del botón
     },
-    textStyle: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
+    textLabel: {
+        fontWeight: '600',
+        textAlign: 'left'
     },
-    modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
+    alert: {
+        backgroundColor: 'green',
     },
-        // ... (otros estilos)
-        addButton: {
-            backgroundColor: 'black',
-            borderRadius: 25,
-            width: 40,
-            height: 40,
-            position: 'absolute',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bottom: 20,
-            right: 20,
-        },
-        btn: {
-            top: 26,
-        },
-        icon: {
-            color: 'white',
-            fontSize: 24,
-        },
-        modalContent: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        buttonContainer: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 10,
-        },
-        container: {
-            flex: 1,
-            padding: 4,
-            backgroundColor: '#f0f0f0',
-        },
-        input: {
-            backgroundColor: 'white',
-            borderRadius: 5,
-            paddingHorizontal: 10,
-            fontSize: 16,
-        },
-        inputContainerStyle: {
-            borderBottomWidth: 0,
-            backgroundColor: 'white',
-            borderRadius: 5,
-            paddingHorizontal: 10,
-            marginVertical: 10,
-        },
-        labelStyle: {
-            fontSize: 12,
-            color: '#333',
-        },
-        datePickerContainer: {
-            flexDirection: 'row',
-            marginBottom: 3,
-            alignItems: 'center',
-            marginVertical: 5,
-    
-        },
-        dateLabel: {
-            fontSize: 12,
-            fontWeight: '600',
-            marginRight: 8,
-            marginLeft: 8
-        },
-        dateText: {
-            fontSize: 16,
-            color: '#333',
-            marginLeft: 10
-        },
-        text: {
-            top: -45,
-            fontSize: 30,
-            fontWeight: '600',
-            justifyContent: 'center',
-            color: 'black'
-        },
+    success: {
+        backgroundColor: 'green',
+    },
+    textError: {
+        color: 'red',
+    }
 });
 
-export default App;
+export default CustomModal;

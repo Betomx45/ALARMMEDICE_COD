@@ -3,9 +3,10 @@ import Treatments from "../../domain/entities/treatments";
 import Medicines from "../../domain/entities/medicamentos";
 import TreatmentsResult from "../../domain/entities/treatmentsResult";
 import backendConfig from "../../../../config/backend/config";
+import AddTreatmentsResult from "../../domain/entities/addTreatmentsResult";
 
 class TreatmentsDatasourceImp extends TreatmentsDatasource {
-    async addTreatments(treatment: Treatments): Promise<Treatments> {
+    async addTreatments(treatment: Treatments): Promise<AddTreatmentsResult> {
         return fetch(`${backendConfig.url}/api/tratamiento`, {
             method: "POST",
             body: JSON.stringify(treatment),
@@ -17,22 +18,24 @@ class TreatmentsDatasourceImp extends TreatmentsDatasource {
             .then((response) => response.json())
             .then((response) => {
                 console.log(response);
-                return treatment
+                const result = new AddTreatmentsResult(response.message, response.treatment || null);
+                result.errors = response.errors || null;
+                result.error = response.error || false;
 
-            })
+                return result;
+            });
     }
-   getTreatments(): Promise<TreatmentsResult> {
+    getTreatments(): Promise<TreatmentsResult> {
         return fetch(`${backendConfig.url}/api/tratamiento`)
             .then((response) => response.json())
             .then((response) => {
-                //response.data { info, results }
                 const treatments = response.map((item: any) => new Treatments(
                     item.nombreTratamiento,
                     item.fechaInicio,
                     item.fechaFinal,
                     item.intervaloDosis,
-                    item.status,
                     item.id,
+                    item.status,
                 ),
 
                 );
