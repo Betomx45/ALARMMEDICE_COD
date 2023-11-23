@@ -13,9 +13,11 @@ interface ContextDefinition {
   // definición de estado
   loading: boolean;
   treatments: Treatments[];
+  treatmentsSelected: Treatments | null;
 
   // acciones que tendrá el context
   getTreatments: () => void;
+  setTreatmentsSelected: (treatment: Treatments | null) => void;
 }
 
 // crear el objeto context de React
@@ -28,17 +30,21 @@ const TreatmentsContext = createContext({} as ContextDefinition);
 interface TreatmentsState {
   loading: boolean;
   treatments: Treatments[];
+  treatmentsSelected: Treatments | null;
 }
 
 // definir los tipos de acciones que podrá ejecutar el context / provider
 type TreatmentsActionType =
   | { type: "Set Loading"; payload: boolean }
-  | { type: "Set Data"; payload: TreatmentsResult };
+  | { type: "Set Data"; payload: TreatmentsResult }
+  | { type: "Set Treatment Selected"; payload: Treatments | null };
 
 // inciializar el state
 const initialState: TreatmentsState = {
   loading: false,
   treatments: [],
+  treatmentsSelected: null
+
 };
 
 // definición del reducer
@@ -57,6 +63,13 @@ function treatmentsReducer(
         ...state,
         treatments: action.payload.treatments,
         loading: false,
+
+        // otras manipulaciones de estado
+      };
+    case "Set Treatment Selected":
+      return {
+        ...state,
+        treatmentsSelected: action.payload
 
         // otras manipulaciones de estado
       };
@@ -95,12 +108,22 @@ const TreatmentsProvider: FC<Props> = ({ children }) => {
     });
   }
 
+  function setTreatmentsSelected(treatment: Treatments | null){
+    console.log(treatment);
+    
+    dispatch({
+      type:'Set Treatment Selected',
+      payload: treatment,
+    });
+  }
   // retornar la estructura del provider
   return (
     <TreatmentsContext.Provider value={{
       ...state,
 
       getTreatments,
+      setTreatmentsSelected
+
     }}>
       {children}
     </TreatmentsContext.Provider>

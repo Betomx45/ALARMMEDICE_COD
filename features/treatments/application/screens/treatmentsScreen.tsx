@@ -5,13 +5,14 @@ import CustomModal from "./components/addTreatment";
 import TreatmentsCard from "./components/treatmentsCard";
 import { TreatmentsProvider, useTreatmentsState } from "../providers/treatmentsProvider";
 
-
 const TreatmentScreenView = () => {
 
   const {
-    treatments,
     loading,
-    getTreatments
+    treatments,
+    treatmentsSelected,
+    getTreatments,
+    setTreatmentsSelected,
   } = useTreatmentsState();
 
   const [modalVisible, setModalVisible] = React.useState(false);

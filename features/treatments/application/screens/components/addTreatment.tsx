@@ -157,6 +157,7 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
                                 </View>
                             }
                         />
+                        
                         <Button
                             title="Cancelar"
                             buttonStyle={styles.cancelButton}

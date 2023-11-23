@@ -2,7 +2,6 @@ import { useState, FC } from 'react';
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { View, Text, TextInput, Button, StyleSheet, Image, ToastAndroid, TouchableOpacity } from 'react-native';
 import firebaseApp from '../../../../config/database/firebase';
-import React from 'react';
 import AddUserScreen from '../../../users/application/screens/addUsersScreen';
 
 // import { theme } from '../core/theme'

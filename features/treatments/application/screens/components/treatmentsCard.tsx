@@ -9,14 +9,18 @@ import React from 'react';
 
 
 type TreatmentsProps = {
-    treatments: Treatments
+    treatments: Treatments,
+    onEdit?: Function,
 }
 
 
-export default function TreatmentsCard(props: TreatmentsProps) {
+const TreatmentsCard: React.FC<TreatmentsProps> =({
+    treatments,
+    onEdit
+}) => {
     // Define un objeto de estilos para el estado
-    const fechaInicio: Date = props.treatments.fechaInicio;
-    const fechaFinal: Date = props.treatments.fechaFinal;
+    const fechaInicio: Date = treatments.fechaInicio;
+    const fechaFinal: Date = treatments.fechaFinal;
     const fechaFormateada1 = moment(fechaInicio);
     fechaFormateada1.locale('es')
     const fechaFormateada2 = moment(fechaFinal);
@@ -25,21 +29,25 @@ export default function TreatmentsCard(props: TreatmentsProps) {
     const nombreMes1: string = fechaFormateada1.format('DD [de] MMMM [de] YYYY');
     const nombreMes2: string = fechaFormateada2.format('DD [de] MMMM [de] YYYY');
 
+    const handleEdit = () => {
+        
+    }
+
     
     return (
         <ScrollView>
             <Card>
-                <Card.Title>{props.treatments.nombreTratamiento}</Card.Title>
+                <Card.Title>{treatments.nombreTratamiento}</Card.Title>
                 <Card.Divider />
                 <View style={styles.container}>
                     <Text style={styles.texts}>Inicio:  {nombreMes1}</Text>
                     <Text style={styles.texts}>Fin:  {nombreMes2}</Text>
-                    <Text style={styles.texts}>Cada  {props.treatments.intervaloDosis} hrs</Text>
-                    <Text style={styles.texts}>Este tratamiento esta  {props.treatments.status}</Text>
+                    <Text style={styles.texts}>Cada  {treatments.intervaloDosis} hrs</Text>
+                    <Text style={styles.texts}>Este tratamiento esta  {treatments.status}</Text>
                 </View>
 
                 <View style={styles.contenidoDeLaTarjeta}>
-                    <TouchableOpacity style={styles.boton}>
+                    <TouchableOpacity style={styles.boton} >
                         <Icon name="edit" size={24} color="blue" />
                         <Text>Editar</Text>
                     </TouchableOpacity>
@@ -84,3 +92,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
+
+export default TreatmentsCard;

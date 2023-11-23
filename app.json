@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,16 +15,34 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Usaremos la cámara para capturar una foto de perfil.",
+        "NSLocationUsageDescription": "Usaremos la ubicación para procesar las entregas.",
+        "NSContactsUsageDescription": "Leeremos tus contactos para ampliar tu red social."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permissions.INTERNET",
+        "android.permissions.CAMERA",
+        "android.permissions.ACCES_BACKGROUND_LOCATION",
+        "android.permissions.ACCES_FINE_LOCATION",
+        "android.permissions.READ_CONTACTS"
+      ],
+      "package": "com.betoxquisx.newproyect"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4356fbc8-0bf4-4364-9203-8d62f7329c5a"
+      }
     }
   }
 }
