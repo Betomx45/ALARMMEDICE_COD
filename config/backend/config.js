@@ -1,5 +1,5 @@
 const backendConfig = {
-    url: 'http://172.16.96.79:3000'
+    url: 'https://alarm-medice.vercel.app'
 }
 
 export default backendConfig;
