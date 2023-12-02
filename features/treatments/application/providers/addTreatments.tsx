@@ -57,7 +57,7 @@ const initialState: AddTreatmentsState = {
     new Date(),
     new Date(),
     '',
-    new Medicines('Pearls', 'Tomar una al dia')
+    new Medicines('', '')
   ),
   errors: {}
 }

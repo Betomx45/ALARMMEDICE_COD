@@ -61,7 +61,7 @@ export default function MedicineCard(props: CardProps) {
     cardContainer: {
       borderRadius: 10,
       backgroundColor: '#FFFFFF',
-      width: 360,
+      width: 'auto',
     },
   
     cardImage: {

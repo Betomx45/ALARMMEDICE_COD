@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Modal, StyleSheet, Text, TextInput, View, TouchableOpacity,Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useAddTreatmentsState, AddTreatmentsProvider } from '../../providers/addTreatments';
 import { Icon, Button } from "@rneui/base";
+
+
 
 interface CustomModalProps {
     modalVisible: boolean;
@@ -38,17 +40,15 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
     };
 
     const handleStartDateChange = (event: Event, selectedDate?: Date) => {
-        setShowStartDatePicker(false);
-        if (selectedDate) {
-            setStartDate(selectedDate);
-        }
+        const currentDate = selectedDate || startDate;
+        setShowStartDatePicker(Platform.OS === 'ios');
+        setStartDate(currentDate);
     };
 
     const handleEndDateChange = (event: Event, selectedDate?: Date) => {
-        setShowEndDatePicker(false);
-        if (selectedDate) {
-            setEndDate(selectedDate);
-        }
+        const currentDate = selectedDate || endDate;
+        setShowEndDatePicker(Platform.OS === 'ios');
+        setEndDate(currentDate);
     };
 
     return (
@@ -69,7 +69,7 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
 
 
                     <Text style={styles.textLabel}>Nombre del tratamiento:</Text>
-                    
+
                     <TextInput
                         style={[styles.input, (errors?.nombreTratamiento ? styles.textError : null)]}
                         placeholder="Ingrese el nombre del tratamiento"
@@ -78,28 +78,31 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
                             setTreatmentsProp('nombreTratamiento', text);
                         }}
                     ></TextInput>
+
                     {errors?.nombreTratamiento ? (
                         <Text style={styles.textError}>{errors.nombreTratamiento}</Text>
                     ) : null}
                     <View style={styles.datePickerContainer}>
                         <Text style={styles.dateLabel}>Fecha de Inicio:</Text>
-                        <Icon
-                            name="calendar"
-                            size={12}
-                            type="font-awesome"
-                            onPress={showStartDate}
-                        />
-                        <Text style={styles.dateText}>{startDate.toDateString()}</Text>
-                        {showStartDatePicker && (
-                            <DateTimePicker
-                                value={treatments?.fechaInicio || new Date()}
-                                mode="date"
-                                onChange={(date) => {
-                                    setTreatmentsProp('fechaInicio', date)
-                                }}
-                                display="spinner"
+                        <TouchableOpacity>
+                            <Icon
+                                name="calendar"
+                                size={12}
+                                type="font-awesome"
+                                onPress={showEndDate}
                             />
-                        )}
+                            {showStartDatePicker &&(
+                                <DateTimePicker
+                                    testID='dateTimePicker'
+                                    mode='date'
+                                    is24Hour={true}
+                                    display='default'
+                                    onChange={handleStartDateChange}
+                                />
+                            )
+
+                            }
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.datePickerContainer}>
@@ -122,6 +125,7 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
                             />
                         )}
                     </View>
+
                     <Text style={styles.textLabel}>Intervalo de dosis:</Text>
                     <TextInput
                         style={[styles.input, (errors?.intervaloDosis ? styles.textError : null)]}
@@ -131,6 +135,7 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
                             setTreatmentsProp('intervaloDosis', text);
                         }}
                     ></TextInput>
+
                     {errors?.intervaloDosis ? (
                         <Text style={styles.textError}>{errors.intervaloDosis}</Text>
                     ) : null}
@@ -146,6 +151,7 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
                         style={styles.input}
                         placeholder="Escriba la descripción"
                     />
+
                     <View style={styles.buttonContainer}>
                         <Button
                             title="Guardar"
@@ -157,6 +163,7 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
                                 </View>
                             }
                         />
+
                         <Button
                             title="Cancelar"
                             buttonStyle={styles.cancelButton}
