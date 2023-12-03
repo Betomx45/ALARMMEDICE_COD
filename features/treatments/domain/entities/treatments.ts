@@ -1,5 +1,5 @@
 
-class Treatment {
+class Treatments {
   id?: number;
   nombreTratamiento: string;
   fechaInicio: Date;
@@ -36,4 +36,4 @@ class Treatment {
   }
 }
 
-export default Treatment;
+export default Treatments;

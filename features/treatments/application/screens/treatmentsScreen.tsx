@@ -4,6 +4,7 @@ import { Icon } from "@rneui/themed";
 import CustomModal from "./components/addTreatment";
 import TreatmentsCard from "./components/treatmentsCard";
 import { TreatmentsProvider, useTreatmentsState } from "../providers/treatmentsProvider";
+import EditModalTreatments from "./components/treamentsEditModal";
 
 const TreatmentScreenView = () => {
 
@@ -25,8 +26,14 @@ const TreatmentScreenView = () => {
     if (treatments == null) {
       return null;
     }
-    return treatments?.map((treatment, index) => (
-      <TreatmentsCard key={index} treatments={treatment} />
+    return treatments?.map((
+        treatment, 
+        index) => (
+      <TreatmentsCard 
+        key={index} 
+        treatments={treatment}
+        onEdit={setTreatmentsSelected} 
+        />
     ))
   }
   useEffect(() => {
@@ -42,6 +49,16 @@ const TreatmentScreenView = () => {
       <ScrollView>
         {renderCards()}
       </ScrollView>
+
+      {!!treatmentsSelected ? (
+      <EditModalTreatments
+        treatmentsEdit={treatmentsSelected}
+        modalVisible={!!treatmentsSelected}
+        onSaved={setTreatmentsSelected}
+        onCancelEdit={setTreatmentsSelected}
+      />
+      ):null}
+      
     </View>
   );
 }

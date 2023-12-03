@@ -30,7 +30,9 @@ const TreatmentsCard: React.FC<TreatmentsProps> =({
     const nombreMes2: string = fechaFormateada2.format('DD [de] MMMM [de] YYYY');
 
     const handleEdit = () => {
-        
+        if(onEdit){
+            onEdit(treatments);
+        }
     }
 
     
@@ -47,7 +49,7 @@ const TreatmentsCard: React.FC<TreatmentsProps> =({
                 </View>
 
                 <View style={styles.contenidoDeLaTarjeta}>
-                    <TouchableOpacity style={styles.boton} >
+                    <TouchableOpacity style={styles.boton} onPress={handleEdit} >
                         <Icon name="edit" size={24} color="blue" />
                         <Text>Editar</Text>
                     </TouchableOpacity>

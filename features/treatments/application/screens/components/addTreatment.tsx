@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, View, TouchableOpacity,Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useAddTreatmentsState, AddTreatmentsProvider } from '../../providers/addTreatments';
+import { useAddTreatmentsState, AddTreatmentsProvider } from '../../providers/addTreatmentsProvider';
 import { Icon, Button } from "@rneui/base";
 
 
@@ -11,7 +11,9 @@ interface CustomModalProps {
     setModalVisible: (visible: boolean) => void;
 }
 
-const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVisible }) => {
+const CustomModalView: React.FC<CustomModalProps> = ({ 
+    modalVisible,
+    setModalVisible }) => {
     const {
         treatments,
         message,
@@ -20,36 +22,16 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
         saving,
         loading,
         setTreatmentsProp,
-        saveTreatments
+        saveTreatments,
     } = useAddTreatmentsState();
 
-    const [startDate, setStartDate] = useState<Date>(new Date());
-    const [endDate, setEndDate] = useState<Date>(new Date());
     const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
 
     const showEndModal = () => {
         setModalVisible(false);
     };
-    const showStartDate = () => {
-        setShowEndDatePicker(false);
-    };
-
-    const showEndDate = () => {
-        setShowEndDatePicker(true);
-    };
-
-    const handleStartDateChange = (event: Event, selectedDate?: Date) => {
-        const currentDate = selectedDate || startDate;
-        setShowStartDatePicker(Platform.OS === 'ios');
-        setStartDate(currentDate);
-    };
-
-    const handleEndDateChange = (event: Event, selectedDate?: Date) => {
-        const currentDate = selectedDate || endDate;
-        setShowEndDatePicker(Platform.OS === 'ios');
-        setEndDate(currentDate);
-    };
+    
 
     return (
         <Modal
@@ -82,49 +64,51 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
                     {errors?.nombreTratamiento ? (
                         <Text style={styles.textError}>{errors.nombreTratamiento}</Text>
                     ) : null}
-                    <View style={styles.datePickerContainer}>
-                        <Text style={styles.dateLabel}>Fecha de Inicio:</Text>
-                        <TouchableOpacity>
-                            <Icon
-                                name="calendar"
-                                size={12}
-                                type="font-awesome"
-                                onPress={showEndDate}
-                            />
-                            {showStartDatePicker &&(
-                                <DateTimePicker
-                                    testID='dateTimePicker'
-                                    mode='date'
-                                    is24Hour={true}
-                                    display='default'
-                                    onChange={handleStartDateChange}
-                                />
-                            )
 
-                            }
-                        </TouchableOpacity>
-                    </View>
+            <View style={styles.datePickerContainer}>
+                <Text style={styles.dateLabel}>Fecha de Inicio:</Text>
+                <Icon
+                    name="calendar"
+                    size={12}
+                    type="font-awesome"
+                    onPress={() => setShowStartDatePicker(true)}
+                />
+                <Text style={styles.dateText}>{treatments.fechaInicio.toDateString()}</Text>
+                {showStartDatePicker && (
+                    <DateTimePicker
+                        value={treatments?.fechaInicio || new Date()}
+                        mode="date"
+                        onChange={(event, date) => {
+                            setShowStartDatePicker(Platform.OS === 'ios');
+                            setTreatmentsProp('fechaInicio', date);
+                        }}
+                        display="spinner"
+                    />
+                )}
+            </View>
 
-                    <View style={styles.datePickerContainer}>
-                        <Text style={styles.dateLabel}>Fecha de Fin:</Text>
-                        <Icon
-                            name="calendar"
-                            size={12}
-                            type="font-awesome"
-                            onPress={showEndDate}
-                        />
-                        <Text style={styles.dateText}>{endDate.toDateString()}</Text>
-                        {showEndDatePicker && (
-                            <DateTimePicker
-                                value={treatments?.fechaFinal || new Date()}
-                                mode="date"
-                                onChange={(date) => {
-                                    setTreatmentsProp('fechaFinal', date)
-                                }}
-                                display="spinner"
-                            />
-                        )}
-                    </View>
+            <View style={styles.datePickerContainer}>
+                <Text style={styles.dateLabel}>Fecha de Fin:</Text>
+                <Icon
+                    name="calendar"
+                    size={12}
+                    type="font-awesome"
+                    onPress={() => setShowEndDatePicker(true)}
+                />
+                <Text style={styles.dateText}>{treatments.fechaFinal.toDateString()}</Text>
+                {showEndDatePicker && (
+                    <DateTimePicker
+                        value={treatments?.fechaFinal || new Date()}
+                        mode="date"
+                        onChange={(event, date) => {
+                            setShowEndDatePicker(Platform.OS === 'ios');
+                            setTreatmentsProp('fechaFinal', date);
+                        }}
+                        display="spinner"
+                    />
+                )}
+            </View>
+
 
                     <Text style={styles.textLabel}>Intervalo de dosis:</Text>
                     <TextInput
@@ -140,17 +124,27 @@ const CustomModalView: React.FC<CustomModalProps> = ({ modalVisible, setModalVis
                         <Text style={styles.textError}>{errors.intervaloDosis}</Text>
                     ) : null}
 
-                    <Text style={styles.textLabel}>Nombre del medicamento:</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ingrese el nombre del medicamento"
-                    />
+                    <View>
+                        <Text style={styles.textLabel}>Nombre del medicamento:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ingrese el nombre del medicamento"
+                            value={treatments?.medicamento?.nombre || ''}
+                            onChangeText={(text) => {
+                            setTreatmentsProp('medicamento', { ...treatments.medicamento, nombre: text });
+                            }}
+                        />
 
-                    <Text style={styles.textLabel}>Descripción del medicamento:</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Escriba la descripción"
-                    />
+                        <Text style={styles.textLabel}>Descripción del medicamento:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Escriba la descripción"
+                            value={treatments?.medicamento?.descripcion || ''}
+                            onChangeText={(text) => {
+                            setTreatmentsProp('medicamento', { ...treatments.medicamento, descripcion: text });
+                            }}
+                        />
+                        </View>
 
                     <View style={styles.buttonContainer}>
                         <Button

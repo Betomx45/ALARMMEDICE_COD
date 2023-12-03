@@ -41,19 +41,6 @@ const MainScreen = ({ }) => {
                     
                 }}
             />
-
-            <Tab.Screen
-
-                name="Usuarios"
-                component={AddUserScreen}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Entypo name="add-user" size={24} color={color} />
-                    ),
-                    title: 'Usuarios'
-                }}
-            />
-
             <Tab.Screen
 
                 name="Perfil"

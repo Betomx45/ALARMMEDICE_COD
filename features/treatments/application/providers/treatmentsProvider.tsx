@@ -25,7 +25,7 @@ const TreatmentsContext = createContext({} as ContextDefinition);
 
 // estrucutura del estado
 // debe coincidir con la estructura del context
-// no lleva accione                                                                                                                                                                                     s
+// no lleva acciones                                                                                                                                                                                     s
 // el state represneta los valores
 interface TreatmentsState {
   loading: boolean;

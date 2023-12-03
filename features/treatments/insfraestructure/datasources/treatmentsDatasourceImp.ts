@@ -8,7 +8,7 @@ import AddTreatmentsResult from "../../domain/entities/addTreatmentsResult";
 class TreatmentsDatasourceImp extends TreatmentsDatasource {
     async addTreatments(treatment: Treatments): Promise<AddTreatmentsResult> {
         return fetch(`${backendConfig.url}/api/tratamiento`, {
-            method: "POST",
+            method: !treatment "POST",
             body: JSON.stringify(treatment),
             headers: {
                 "Content-Type": "application/json"
